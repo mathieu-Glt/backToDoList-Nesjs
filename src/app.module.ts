@@ -4,9 +4,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { User } from './user/entity/user.entity';
 import { UserModule } from './user/user.module';
+import { ListTaskModule } from './listTasks/listTask.module';
+import { ListTask } from './listTasks/entity/listTask.entity';
+@Global()
 @Module({
   imports: [
     UserModule,
+    ListTaskModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -14,10 +18,10 @@ import { UserModule } from './user/user.module';
       username: 'user',
       password: 'password',
       database: 'todolist_db',
-      entities: [User], // In array add entities
+      entities: [User, ListTask], // In array add entities
       synchronize: true
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, ListTask]),
   ],
   controllers: [AppController],
   providers: [AppService],

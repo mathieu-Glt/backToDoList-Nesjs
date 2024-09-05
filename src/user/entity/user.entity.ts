@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ListTask } from "src/listTasks/entity/listTask.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -16,5 +17,8 @@ export class User {
 
     @Column()
     password: string;
+
+    @OneToMany(() => ListTask, (listTask) => listTask.user, { cascade: ["remove"] }) // this option allow delete all associated ListTask to User
+    tasksList: ListTask[];
     
 }

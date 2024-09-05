@@ -14,9 +14,9 @@ export class UserController {
     *  User Controller
     * User register
     * @param  body - createUserDto
-    * POST - api/users
+    * POST - api/users/register
     */
-    @Post()
+    @Post('register')
     async createUser(@Body() createUserDto: CreateUserDto): Promise<ResponsesSuccessInterface | ResponsesErrorInterface> {
         
     try {
