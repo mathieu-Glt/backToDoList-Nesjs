@@ -6,7 +6,7 @@ export class ListTask {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ unique: true })
+    @Column()
     title: string; 
 
     @ManyToOne(() => User, (user) => user.tasksList, { nullable: false })

@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ListTask } from "./entity/listTask.entity";
 import { Repository } from "typeorm";
@@ -24,15 +24,25 @@ export class ListTaskService {
 
         try {
             const { title } = createListTaskDto;
+            // Recover user method from module user
             const user = await this.userService.findUser(createListTaskDto.user)
-            console.log('==================================== listTask service ~ createTaskList');
-            console.log(user);
-            console.log('====================================');
-    
 
+            if(!user) throw new InternalServerErrorException('User not found')
+            // Checking that the task is not the same
+            const existingTask  = await this.listTaskRepository.findOne({ where: { title, user } });
+
+            if(existingTask) throw new ConflictException(`List task with title ${title} already exists`)
+
+            // Create the new task
             const listTask = this.listTaskRepository.create({ title, user })
             return  this.listTaskRepository.save(listTask);
+
         } catch (error) {
+
+            if (error instanceof ConflictException) {
+                // Re-throw specific exceptions without modifying them
+                throw error;
+            }
             console.error('Error creating user:', error.message);
             throw new InternalServerErrorException('Failed to create List task');
 
