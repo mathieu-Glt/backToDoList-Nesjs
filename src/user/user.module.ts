@@ -8,7 +8,6 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), ConfigModule.forRoot({ isGlobal: true }), JwtModule.register({ global: true, secret: 'secret', signOptions: { expiresIn: '3600s'} })],
-
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService] // Export UserService if other modules need it

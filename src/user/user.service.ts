@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from "./entity/user.entity";
 import { Repository } from "typeorm";
@@ -16,7 +16,7 @@ import { signInResponseInterface } from "./interface/response.interface";
 export class UserService { 
     constructor(
         @InjectRepository(User)
-        private userRepository: Repository<User>,
+        private readonly userRepository: Repository<User>,
         private readonly jwtService: JwtService,
         private configService: ConfigService
     ) {}
@@ -97,35 +97,6 @@ export class UserService {
         }
     }
 
-    /**
-     * Manages the creation and update of tokens.
-     * @param user - UserDocument
-     * @returns Tokens and their details.
-     */
-
-    // private async handlerTokens(user: User): Promise<getTokenInterface> {
-    //     try {
-    //         console.log('==================================== user.service ~ handlerToken');
-    //         console.log(user);
-    //         console.log('==================================== user.service');
-
-    //     // Generate accessToken and refreshToken using the getTokens function
-    //     //    const { accessToken, refreshToken } = this.getTokens(user);
-    //     const tokens = await this.getTokens(user);
-
-    //     // Return the generated tokens
-    //     return tokens;
-    //     // return {
-    //     //     accessToken,
-    //     //     refreshToken,
-    //     // }
-
-
-    //     } catch (error) {
-    //         console.error('Error creating user:', error.message);
-    //         throw new InternalServerErrorException('Failed to create user');
-    //     }
-    // }
 
      /**
      * Generates and returns access and refresh tokens 
@@ -185,6 +156,28 @@ export class UserService {
         }
 
     }
+
+    /**
+    * Find a user by their ID.
+    * @param id - The ID of the user to find.
+    * @returns A promise that resolves to the found user.
+    */
+    async findUser(id: number): Promise<User> {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id },
+            })
+
+            if(!user) throw new NotFoundException('User not found')
+
+            return user;
+            
+        } catch (error) {
+            throw new Error('Problem during operation');
+
+        }
+    }
+
 
 
 
