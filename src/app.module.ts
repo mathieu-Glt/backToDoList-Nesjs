@@ -1,16 +1,28 @@
 import { Global, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppService } from './app.service';
-import { User } from './user/entity/user.entity';
-import { UserModule } from './user/user.module';
-import { ListTaskModule } from './listTasks/listTask.module';
-import { ListTask } from './listTasks/entity/listTask.entity';
+import { User } from './modules/user/entity/user.orm-entity';
+import { UserModule } from './modules/user/user.module';
+import { TaskList } from './modules/taskList/entity/taskList.orm-entity';
+import { AuthModule } from './modules/auth/auth.module';
+import { Task } from './modules/task/entity/task.orm-entity';
+import { HttpErrorFilter } from './shared/core/HttpErrorFilter';
+import { LoggingInterceptor } from './shared/core/LoggingReqInterceptor';
+import { AuthGuard } from './modules/auth/auth.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
+
+// I adhere to SOLID principles for this project,
+// but I choose to use certain dependencies directly in a few services,
+// such as bcrypt or Nest's built-in tools.
 @Global()
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
+    AuthModule,
     UserModule,
-    ListTaskModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -18,12 +30,23 @@ import { ListTask } from './listTasks/entity/listTask.entity';
       username: 'user',
       password: 'password',
       database: 'todolist_db',
-      entities: [User, ListTask], // In array add entities
-      synchronize: true
+      entities: [User, TaskList, Task],
+      synchronize: true,
     }),
-    TypeOrmModule.forFeature([User, ListTask]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: 'APP_FILTER',
+      useClass: HttpErrorFilter,
+    },
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
