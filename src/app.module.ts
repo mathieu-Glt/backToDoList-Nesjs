@@ -1,16 +1,17 @@
 import { Global, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppService } from './app.service';
 import { User } from './user/entity/user.entity';
 import { UserModule } from './user/user.module';
 import { ListTaskModule } from './listTasks/listTask.module';
 import { ListTask } from './listTasks/entity/listTask.entity';
+import { TaskModule } from './task/task.module';
+import { Task } from './task/entity/task.entity';
 @Global()
 @Module({
   imports: [
     UserModule,
     ListTaskModule,
+    TaskModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -18,12 +19,12 @@ import { ListTask } from './listTasks/entity/listTask.entity';
       username: 'user',
       password: 'password',
       database: 'todolist_db',
-      entities: [User, ListTask], // In array add entities
+      entities: [User, ListTask, Task], // In array add entities
       synchronize: true
     }),
-    TypeOrmModule.forFeature([User, ListTask]),
+    TypeOrmModule.forFeature([User, ListTask, Task]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

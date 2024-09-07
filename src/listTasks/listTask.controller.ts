@@ -14,11 +14,17 @@ export class ListTaskController {
     constructor(private readonly listTaskService: ListTaskService) {}
 
     /**
-    * ListTask Controller
-    * ListTask create
-    * @param  body - CreateListTaskDto
+    * ListTask Controller - Handles operations related to creating task lists.
+    * Endpoint to create a new task list.
     * POST - api/list-tasks
+    * @summary Creates a new task list.
+    * @param {CreateListTaskDto} body - The data transfer object containing the details required to create a new task list.
+    * @returns {Promise<ResponsesSuccessInterface | ResponsesErrorInterface>} - A promise that resolves to either:
+    *  - Success: An object containing the status (201), a success message, and the details of the created task list.
+    *  - Error: An object containing the status (500), an error message, and error details if something goes wrong.
+    * @throws {500 Internal Server Error} - If there is any issue during the creation process.
     */
+
    @Post()
    async createListTask(@Body() createListTaskDto: CreateListTaskDto): Promise<ResponsesSuccessInterface | ResponsesErrorInterface> {
         try {
@@ -33,18 +39,23 @@ export class ListTaskController {
    }
 
     /**
-    * ListTask Controller
-    * ListTask to get all tasks for a specific user
-    * @param params -  User ID 
-    * @return all list tasks
+    * ListTask Controller - Handles operations related to creating task lists.
+    * Endpoint to retrieve all task lists associated with a specific user.
     * GET - api/list-tasks/:userId
+    * @summary Retrieves all task lists for a given user.
+    * @param {number} userId - The ID of the user whose task lists are being requested.
+    * @returns {Promise<ResponsesSuccessInterface | ResponsesErrorInterface>} - A promise that resolves to either:
+    *  - Success: An object containing the status (200), a success message, and the task lists associated with the user.
+    *  - Error: An object containing the status (500), an error message, and error details if something goes wrong.
+    * @throws {500 Internal Server Error} - If there is any issue during the retrieval process.
+    * @throws {404 Not Found} - If no task lists are found for the provided userId.
+    * 
     */
+
    @Get(':userId')
     async getAllListTask(@Param('userId') userId: number): Promise<ResponsesSuccessInterface | ResponsesErrorInterface> {
-        console.log('==================================== listTask controller ~ getAllListTask');
         try {
             const listTask = await this.listTaskService.getAllListTask(userId);
-            console.log('==================================== listTask controller ~ listTask', listTask);
             return { status: 200, error: false, message: 'List tasks found', results: listTask}
 
 
@@ -57,12 +68,18 @@ export class ListTaskController {
 
 
     /**
-    * ListTask Controller
-    * ListTask to get all tasks for a specific user
-    * @param params -  List task ID 
-    * @return all list tasks
+    * ListTask Controller - Handles operations related to retrieving a single task list.
+    * Endpoint to retrieve a specific task list by its ID.
     * GET - api/list-tasks/v1/:id
+    * @summary Retrieves a single task list by ID.
+    * @param {number} id - The ID of the task list to be retrieved.
+    * @returns {Promise<ResponsesSuccessInterface | ResponsesErrorInterface>} - A promise that resolves to either:
+    *  - Success: An object containing the status (200), a success message, and the details of the retrieved task list.
+    *  - Error: An object containing the status (500), an error message, and error details if something goes wrong.
+    * @throws {500 Internal Server Error} - If there is any issue during the retrieval process.
+    * @throws {404 Not Found} - If no task list is found for the provided ID.
     */
+
        @Get('v1/:id')
        async getOneListTask(@Param('id') id: number): Promise<ResponsesSuccessInterface | ResponsesErrorInterface> {
            console.log('==================================== listTask controller ~ getAllListTask');
@@ -80,11 +97,17 @@ export class ListTaskController {
       }
 
     /**
-     * ListTask Controller
-     * ListTask delete by ID
-     * @param listTaskId - ID of the ListTask to delete
-     * DELETE - api/list-tasks/:id
-     */
+    * ListTask Controller - Handles operations related to deleting a task list.
+    * Endpoint to delete a specific task list by its ID.
+    * DELETE - api/list-tasks/:id
+    * @summary Deletes a task list by ID.
+    * @param {number} id - The ID of the task list to be deleted.
+    * @returns {Promise<ResponsesSuccessInterface | ResponsesErrorInterface>} - A promise that resolves to either:
+    *  - Success: An object containing the status (200), a success message, and details of the deleted task list.
+    *  - Error: An object containing the status (500), an error message, and error details if something goes wrong.
+    * @throws {500 Internal Server Error} - If there is any issue during the deletion process.
+    * @throws {404 Not Found} - If the task list with the given ID is not found.
+    */
 
     @Delete(':id')
     async deleteListTask(@Param('id') id:number): Promise<ResponsesSuccessInterface | ResponsesErrorInterface> {

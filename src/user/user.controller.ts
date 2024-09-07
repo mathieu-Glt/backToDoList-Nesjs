@@ -10,12 +10,22 @@ import { ResponsesErrorInterface, ResponsesSuccessInterface } from "./interface/
 
 export class UserController {
     constructor(private readonly userService: UserService) {}
+
+
+
     /**
-    *  User Controller
-    * User register
-    * @param  body - createUserDto
+    * User Controller - Handles user registration and account creation.
+    * Endpoint to register a new user.
     * POST - api/users/register
+    * @summary Registers a new user.
+    * @param {CreateUserDto} createUserDto - The data transfer object containing the details required to register a new user (e.g., username, email, password).
+    * @returns {Promise<ResponsesSuccessInterface | ResponsesErrorInterface>} - A promise that resolves to either:
+    *  - Success: An object containing the status (201), a success message, and details of the newly created user.
+    *  - Error: An object containing the status (500), an error message, and error details if something goes wrong.
+    * @throws {500 Internal Server Error} - If there is any issue during the user registration process.
+    * @throws {400 Bad Request} - If the input data is invalid or incomplete.
     */
+
     @Post('register')
     async createUser(@Body() createUserDto: CreateUserDto): Promise<ResponsesSuccessInterface | ResponsesErrorInterface> {
         
@@ -31,11 +41,18 @@ export class UserController {
     }
 
     /**
-    *  User Controller
-    * User login
-    * @param  body - signInUserDto
+    * User Controller - Handles user authentication and login.
+    * Endpoint to log in a user.
     * POST - api/login
+    * @summary Logs in a user by validating credentials.
+    * @param {SignInUserDto} signInUserDto - The data transfer object containing the user's login credentials (e.g., email and password).
+    * @returns {Promise<ResponsesSuccessInterface | ResponsesErrorInterface>} - A promise that resolves to either:
+    *  - Success: An object containing the status (200), a success message, and the user session data (e.g., token, user details).
+    *  - Error: An object containing the status (500), an error message, and error details if something goes wrong.
+    * @throws {401 Unauthorized} - If the provided credentials are invalid or the user is not authenticated.
+    * @throws {500 Internal Server Error} - If there is any issue during the login process.
     */
+   
     @Post('login')
     async login(@Body() signInUserDto: any): Promise<ResponsesSuccessInterface | ResponsesErrorInterface> {
         try {

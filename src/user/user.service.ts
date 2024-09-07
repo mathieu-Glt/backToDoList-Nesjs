@@ -55,7 +55,6 @@ export class UserService {
     /**
      * User login.
      * @param body - signInUserDto
-     * @review => ok
      */
 
     async signIn(signInUserDto: SignInUserDto): Promise<signInResponseInterface | InternalServerErrorException> {

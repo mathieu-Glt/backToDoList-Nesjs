@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ListTask } from "./entity/listTask.entity";
 import { Repository } from "typeorm";
@@ -25,21 +25,32 @@ export class ListTaskService {
         try {
             const { title } = createListTaskDto;
             const user = await this.userService.findUser(createListTaskDto.user)
-            console.log('==================================== listTask service ~ createTaskList');
-            console.log(user);
-            console.log('====================================');
-    
+            
+            const existingTask = await this.listTaskRepository.findOne({ where: { title, user: user } });
+
+            if (existingTask) {
+                throw new ConflictException(`Task with title "${title}" already exists for this user.`);
+            }
 
             const listTask = this.listTaskRepository.create({ title, user })
             return  this.listTaskRepository.save(listTask);
         } catch (error) {
-            console.error('Error creating user:', error.message);
+
+            if (error instanceof ConflictException) {
+                throw error;
+            }
+             console.error('Error creating user:', error.message);
             throw new InternalServerErrorException('Failed to create List task');
 
         }
     }
 
-// Method to get all tasks for a specific user
+ 
+    /**
+     * Method to get all tasks for a specific user  
+     * @param userId - number
+     */
+
     async getAllListTask(userId: number): Promise<ListTask[] | InternalServerErrorException> {
         try {
 
@@ -63,8 +74,11 @@ export class ListTaskService {
         }
     }
 
-    // Method to get all tasks for a specific user
-    async getOneListTask(id: number): Promise<ListTask | InternalServerErrorException> {
+    /**
+     * Method to get a list task  
+     * @param id - number
+     */
+    async getOneListTask(id: number): Promise<ListTask> {
         try {
 
             // Fetch tasks associated with the user
@@ -79,7 +93,12 @@ export class ListTaskService {
         }
     }
 
-    // Method for delete a list task by its id
+     
+    /**
+     * Method for delete a list task by its id 
+     * @param id - number
+     */
+
     async deleteListTask(id: number): Promise<object | InternalServerErrorException> {
         try {
             // Delete the task
