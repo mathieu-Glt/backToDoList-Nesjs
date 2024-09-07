@@ -1,12 +1,17 @@
 import { ListTask } from "src/listTasks/entity/listTask.entity";
+
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { TaskStatus } from "../enum/stausTask.enum";
+
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
 
 
 @Entity()
 export class Task {
     @PrimaryGeneratedColumn()
     id: number;
+
 
     @Column({ type: 'text'})
     longDescription: string;
@@ -25,5 +30,9 @@ export class Task {
 
     @ManyToOne(() => ListTask, (listTask) => listTask.tasks, { nullable: false, onDelete: 'CASCADE' })
     listTask: ListTask
+}
+
+
+    // @Column()
 }
 

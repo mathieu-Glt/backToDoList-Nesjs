@@ -24,7 +24,9 @@ export class ListTaskService {
 
         try {
             const { title } = createListTaskDto;
+            // Recover user method from module user
             const user = await this.userService.findUser(createListTaskDto.user)
+
             
             const existingTask = await this.listTaskRepository.findOne({ where: { title, user: user } });
 
@@ -32,14 +34,30 @@ export class ListTaskService {
                 throw new ConflictException(`Task with title "${title}" already exists for this user.`);
             }
 
+
+            if(!user) throw new InternalServerErrorException('User not found')
+            // Checking that the task is not the same
+            const existingTask  = await this.listTaskRepository.findOne({ where: { title, user } });
+
+            if(existingTask) throw new ConflictException(`List task with title ${title} already exists`)
+
+            // Create the new task
             const listTask = this.listTaskRepository.create({ title, user })
             return  this.listTaskRepository.save(listTask);
+
         } catch (error) {
 
             if (error instanceof ConflictException) {
+
                 throw error;
             }
              console.error('Error creating user:', error.message);
+
+                // Re-throw specific exceptions without modifying them
+                throw error;
+            }
+            console.error('Error creating user:', error.message);
+
             throw new InternalServerErrorException('Failed to create List task');
 
         }
