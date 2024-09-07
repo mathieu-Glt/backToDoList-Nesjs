@@ -7,7 +7,7 @@ import { UserModule } from "src/user/user.module";
 
 @Module({
     imports: [TypeOrmModule.forFeature([ListTask]), 
-    UserModule // I import UserModule for to use UserService
+    UserModule, // I import UserModule for to use UserService
 ], 
     controllers: [ListTaskController],
     providers: [ListTaskService],

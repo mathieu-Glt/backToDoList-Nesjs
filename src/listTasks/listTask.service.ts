@@ -27,6 +27,14 @@ export class ListTaskService {
             // Recover user method from module user
             const user = await this.userService.findUser(createListTaskDto.user)
 
+            
+            const existingTask = await this.listTaskRepository.findOne({ where: { title, user: user } });
+
+            if (existingTask) {
+                throw new ConflictException(`Task with title "${title}" already exists for this user.`);
+            }
+
+
             if(!user) throw new InternalServerErrorException('User not found')
             // Checking that the task is not the same
             const existingTask  = await this.listTaskRepository.findOne({ where: { title, user } });
@@ -40,16 +48,27 @@ export class ListTaskService {
         } catch (error) {
 
             if (error instanceof ConflictException) {
+
+                throw error;
+            }
+             console.error('Error creating user:', error.message);
+
                 // Re-throw specific exceptions without modifying them
                 throw error;
             }
             console.error('Error creating user:', error.message);
+
             throw new InternalServerErrorException('Failed to create List task');
 
         }
     }
 
-// Method to get all tasks for a specific user
+ 
+    /**
+     * Method to get all tasks for a specific user  
+     * @param userId - number
+     */
+
     async getAllListTask(userId: number): Promise<ListTask[] | InternalServerErrorException> {
         try {
 
@@ -73,8 +92,11 @@ export class ListTaskService {
         }
     }
 
-    // Method to get all tasks for a specific user
-    async getOneListTask(id: number): Promise<ListTask | InternalServerErrorException> {
+    /**
+     * Method to get a list task  
+     * @param id - number
+     */
+    async getOneListTask(id: number): Promise<ListTask> {
         try {
 
             // Fetch tasks associated with the user
@@ -89,7 +111,12 @@ export class ListTaskService {
         }
     }
 
-    // Method for delete a list task by its id
+     
+    /**
+     * Method for delete a list task by its id 
+     * @param id - number
+     */
+
     async deleteListTask(id: number): Promise<object | InternalServerErrorException> {
         try {
             // Delete the task
