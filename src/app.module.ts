@@ -1,14 +1,21 @@
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/entity/user.entity';
-import { UserModule } from './user/user.module';
-import { ListTaskModule } from './listTasks/listTask.module';
-import { ListTask } from './listTasks/entity/listTask.entity';
-import { TaskModule } from './task/task.module';
-import { Task } from './task/entity/task.entity';
+import { ListTaskModule } from './modules/listTasks/listTask.module';
+import { ListTask } from './modules/listTasks/entity/listTask.entity';
+import { TaskModule } from './modules/task/task.module';
+import { Task } from './modules/task/entity/task.entity';
+import { UserModule } from './modules/user/user.module';
+import { User } from './modules/user/entity/user.entity';
+import { ConfigModule } from '@nestjs/config';
+import { HttpErrorFilter } from './shared/core/HttpErrorFilter';
+import { LoggingInterceptor } from './shared/core/LoggingReqInterceptor';
 @Global()
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
     UserModule,
     ListTaskModule,
     TaskModule,
@@ -19,12 +26,20 @@ import { Task } from './task/entity/task.entity';
       username: 'user',
       password: 'password',
       database: 'todolist_db',
-      entities: [User, ListTask, Task], // In array add entities
-      synchronize: true
+      entities: [User, ListTask, Task], 
+      synchronize: true,
     }),
-    TypeOrmModule.forFeature([User, ListTask, Task]),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: 'APP_FILTER',
+      useClass: HttpErrorFilter,
+    },
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
 export class AppModule {}
