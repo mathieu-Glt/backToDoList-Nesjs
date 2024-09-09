@@ -1,8 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { User } from '../entity/user.orm-entity';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IUserRepo } from './userRepo.spi';
+import { User } from '../entity/user.orm-entity';
 
 @Injectable()
 export class UserRepoImpl implements IUserRepo {
@@ -13,31 +13,25 @@ export class UserRepoImpl implements IUserRepo {
 
   async findById(id: number): Promise<User | null> {
     try {
-      return await this.userRepo.findOneBy({ id });
-    } catch (error) {
-      throw new InternalServerErrorException(
-        `Failed to find user by id: ${error.toString()}`,
-      );
+      return this.userRepo.findOneBy({ id });
+    } catch {
+      throw new Error('Failed to find user');
     }
   }
 
   async findByEmail(email: string): Promise<User | null> {
     try {
-      return (await this.userRepo.findOneBy({ email })) || null;
+      return this.userRepo.findOneBy({ email }) || null;
     } catch {
-      throw new InternalServerErrorException(
-        `Failed to find user by email: ${email}`,
-      );
+      throw new Error('Failed to find user');
     }
   }
 
   async exists(email: string): Promise<boolean> {
     try {
-      return await this.userRepo.existsBy({ email });
+      return this.userRepo.existsBy({ email });
     } catch {
-      throw new InternalServerErrorException(
-        `Failed to check if user exists by email: ${email}`,
-      );
+      throw new Error('Failed to check if user exists');
     }
   }
 
@@ -45,11 +39,9 @@ export class UserRepoImpl implements IUserRepo {
     const newUser = this.userRepo.create(user);
     try {
       await this.userRepo.save(newUser);
-    } catch (error) {
-      await this.userRepo.delete(user);
-      throw new InternalServerErrorException(
-        `Failed to create user: ${error.toString()}`,
-      );
+    } catch {
+      await this.userRepo.delete(newUser);
+      throw new Error('Failed to save user');
     }
 
     return user;
@@ -61,10 +53,8 @@ export class UserRepoImpl implements IUserRepo {
   ): Promise<void> {
     try {
       await this.userRepo.update(userId, { refreshToken });
-    } catch (error) {
-      throw new InternalServerErrorException(
-        `Failed to update refresh token: ${error.toString()}`,
-      );
+    } catch {
+      throw new Error('Failed to create refresh token');
     }
   }
 }
