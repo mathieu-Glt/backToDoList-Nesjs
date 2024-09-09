@@ -1,14 +1,15 @@
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ListTaskModule } from './modules/listTasks/listTask.module';
-import { ListTask } from './modules/listTasks/entity/listTask.entity';
-import { TaskModule } from './modules/task/task.module';
-import { Task } from './modules/task/entity/task.entity';
+// import { ListTaskModule } from './modules/listTasks/listTask.module';
+import { TaskList } from './modules/listTasks/entity/listTask.entity';
+// import { TaskModule } from './modules/task/task.module';
+import { Task } from './modules/task/entity/task.orm-entity.ts';
 import { UserModule } from './modules/user/user.module';
-import { User } from './modules/user/entity/user.entity';
+import { User } from './modules/user/entity/user.orm-entity.ts';
 import { ConfigModule } from '@nestjs/config';
 import { HttpErrorFilter } from './shared/core/HttpErrorFilter';
 import { LoggingInterceptor } from './shared/core/LoggingReqInterceptor';
+import { AuthGuard } from './modules/auth/auth.guard';
 @Global()
 @Module({
   imports: [
@@ -17,8 +18,8 @@ import { LoggingInterceptor } from './shared/core/LoggingReqInterceptor';
       isGlobal: true,
     }),
     UserModule,
-    ListTaskModule,
-    TaskModule,
+    // ListTaskModule,
+    // TaskModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -26,7 +27,7 @@ import { LoggingInterceptor } from './shared/core/LoggingReqInterceptor';
       username: 'user',
       password: 'password',
       database: 'todolist_db',
-      entities: [User, ListTask, Task], 
+      entities: [User, TaskList, Task], 
       synchronize: true,
     }),
   ],
@@ -40,6 +41,10 @@ import { LoggingInterceptor } from './shared/core/LoggingReqInterceptor';
       provide: 'APP_INTERCEPTOR',
       useClass: LoggingInterceptor,
     },
+    {
+      provide: 'APP_GUARD',
+      useClass: AuthGuard
+    }
   ],
 })
 export class AppModule {}

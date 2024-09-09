@@ -1,5 +1,5 @@
 import { CreateUserDTO } from "../dto/create-user.dto";
-import { User } from "../entity/user.entity";
+import { User } from "../entity/user.orm-entity.ts";
 
 export interface IUserRepo {
   findById(id: number): Promise<User | null>;

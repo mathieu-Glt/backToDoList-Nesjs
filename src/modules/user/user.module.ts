@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entity/user.entity';
+import { User } from './entity/user.orm-entity.ts';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { UserRepoImpl } from './repo/userRepo.impl';
@@ -22,6 +22,6 @@ import { UserRepoImpl } from './repo/userRepo.impl';
       useClass: UserRepoImpl,
     }
   ],
-  exports: ['IUserRepoImpl'], 
+  exports: ['IUserRepo'], 
 })
 export class UserModule {}

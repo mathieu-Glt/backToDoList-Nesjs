@@ -1,14 +1,15 @@
-import { ListTask } from '../entity/listTask.entity';
+import { TaskList } from "../entity/listTask.entity";
 
+TaskList
 class ResponseInterface {
-  results?: ListTask | {};
+  results?: TaskList | {};
   error: boolean;
   message: string;
   status: number;
 }
 
 export class ResponsesSuccessInterface extends ResponseInterface {
-  results?: ListTask | {};
+  results?: TaskList | {};
 }
 
 export class ResponsesErrorInterface extends ResponseInterface {

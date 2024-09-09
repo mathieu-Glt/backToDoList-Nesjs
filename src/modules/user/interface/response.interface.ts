@@ -1,4 +1,4 @@
-import { User } from '../entity/user.entity';
+import { User } from '../entity/user.orm-entity.ts';
 import { getTokenInterface } from './token.interface';
 
 class ResponseInterface {

@@ -10,12 +10,12 @@ import {
   import { AuthResponseDTO } from './dto/authResponse.dto';
   import { JwtService } from '@nestjs/jwt';
   import { ConfigService } from '@nestjs/config';
-  import { User } from '../user/entity/user.orm-entity';
   import { SignInDTO } from './dto/signIn.dto';
   import { IUserRepo } from '../user/repo/userRepo.spi';
   import * as bcrypt from 'bcrypt';
   import { RefreshTokenDTO } from './dto/refreshToken.dto';
   import { SignOutDTO } from './dto/signOut.dto';
+import { User } from '../user/entity/user.orm-entity.ts';
   
   @Injectable()
   export class AuthService {

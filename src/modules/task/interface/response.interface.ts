@@ -1,5 +1,5 @@
-import { ListTask } from 'src/modules/listTasks/entity/listTask.entity';
-import { Task } from '../entity/task.entity';
+import { TaskList } from 'src/modules/listTasks/entity/listTask.entity.js';
+import { Task } from '../entity/task.orm-entity.ts';
 
 class ResponseInterface {
   results?: Task | {};

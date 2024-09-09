@@ -36,7 +36,6 @@ import { IS_PUBLIC_KEY } from './auth.guard';
     async test(): Promise<string> {
       try {
         throw new ConflictException('Conflict');
-        return 'Hello World! ttttttt';
       } catch (error: Error | any) {
         throw new HttpException(error.message, error.status);
       }
@@ -105,6 +104,3 @@ import { IS_PUBLIC_KEY } from './auth.guard';
     }
   }
 
-function Public(): (target: AuthController, propertyKey: "test", descriptor: TypedPropertyDescriptor<() => Promise<string>>) => void | TypedPropertyDescriptor<() => Promise<string>> {
-    throw new Error('Function not implemented.');
-}
