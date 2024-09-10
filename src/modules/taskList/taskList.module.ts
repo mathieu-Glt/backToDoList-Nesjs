@@ -9,13 +9,14 @@ import { TaskListRepoImpl } from './repo/taskListRepo.impl';
 @Module({
   controllers: [TaskListController],
   imports: [TypeOrmModule.forFeature([TaskList]), UserModule],
-  providers: [TaskListService],
-  exports: [
+  providers: [
     {
       provide: 'ITaskListRepo',
       useClass: TaskListRepoImpl
-    }
-  ],
+    },
+    TaskListService
+],
+  exports: ['ITaskListRepo'],
 })
 export class TaskListModule {}
 

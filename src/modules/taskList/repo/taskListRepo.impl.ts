@@ -52,7 +52,7 @@ export class TaskListRepoImpl implements ITaskListRepo{
         try {
             return await this.taskListRepo.find({ where: { user: { id: userId}}})
         } catch (error) {
-            throw new InternalServerErrorException('Fail to get taskList');
+            throw new InternalServerErrorException('Fail to get taskLists');
  
         }
     }
@@ -65,6 +65,16 @@ export class TaskListRepoImpl implements ITaskListRepo{
             throw new InternalServerErrorException('Fail to get taskList');
 
         }
+    }
+
+    async findByIdListTask(id: number): Promise<TaskList> {
+        try {
+            return await this.taskListRepo.findOne({ where: { id: id } })
+        } catch (error) {
+            throw new InternalServerErrorException('Fail to get taskList');
+
+        }
+
     }
 
     async delete(id: number, userId: number): Promise<void> {

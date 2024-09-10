@@ -47,4 +47,5 @@ export class Task {
     onDelete: 'CASCADE',
   })
   listTask: TaskList;
+
 }

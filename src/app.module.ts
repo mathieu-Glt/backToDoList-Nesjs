@@ -10,6 +10,8 @@ import { LoggingInterceptor } from './shared/core/LoggingReqInterceptor';
 import { AuthGuard } from './modules/auth/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { TaskListModule } from './modules/taskList/taskList.module';
+import { TaskModule } from './modules/task/task.module';
 
 // I adhere to SOLID principles for this project,
 // but I choose to use certain dependencies directly in a few services,
@@ -23,6 +25,8 @@ import { ConfigModule } from '@nestjs/config';
     }),
     AuthModule,
     UserModule,
+    TaskListModule,
+    TaskModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',

@@ -12,7 +12,13 @@ import * as cookieParser from 'cookie-parser';
   app.useGlobalPipes(new ValidationPipe());
 
   // Express
-  app.enableCors();
+  app.enableCors({
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    optionsSuccessStatus: 204,
+    origin: ['http://localhost:5173/', 'http://localhost:5173', 'localhost:5173'],
+    preflightContinue: false,
+  });  
   app.use(compression());
   app.use(cookieParser());
   app.enableVersioning({

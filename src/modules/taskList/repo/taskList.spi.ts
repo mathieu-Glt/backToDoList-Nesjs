@@ -5,6 +5,7 @@ export interface ITaskListRepo {
     findByTitle(title: string, userId: number): Promise<TaskList>,
     findAll(userId: number): Promise<TaskList[]>,
     findById(id: number, userId: number): Promise<TaskList>,
-    delete(id: number, userId: number): Promise<void>
+    delete(id: number, userId: number): Promise<void>,
+    findByIdListTask(id: number): Promise<TaskList>
     
 }
